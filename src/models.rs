@@ -2,19 +2,19 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]
 pub enum Status {
     Open,
     InProgress,
-    Done,
+    Closed,
 }
 
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]
 pub struct Epic {
     pub name: String,
     pub description: String,
     pub status: Status,
-    pub stories: Vec<u16>,
+    pub stories: Vec<u32>,
 }
 
 impl Epic {
@@ -28,7 +28,7 @@ impl Epic {
     }
 }
 
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]
 pub struct Story {
     pub name: String,
     pub description: String,
@@ -45,9 +45,9 @@ impl Story {
     }
 }
 
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]
 pub struct DBState {
-    pub last_item_id: u16,
-    pub epics: HashMap<u16, Epic>,
-    pub stories: HashMap<u16, Story>,
+    pub last_item_id: u32,
+    pub epics: HashMap<u32, Epic>,
+    pub stories: HashMap<u32, Story>,
 }
