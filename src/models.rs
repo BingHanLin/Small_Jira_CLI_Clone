@@ -1,9 +1,15 @@
+use std::collections::HashMap;
+
+use serde::{Deserialize, Serialize};
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub enum Status {
     Open,
     InProgress,
     Done,
 }
 
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct Epic {
     pub name: String,
     pub description: String,
@@ -22,6 +28,7 @@ impl Epic {
     }
 }
 
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct Story {
     pub name: String,
     pub description: String,
@@ -38,8 +45,9 @@ impl Story {
     }
 }
 
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct DBState {
     pub last_item_id: u16,
-    pub epics: Vec<Epic>,
-    pub stories: Vec<Story>,
+    pub epics: HashMap<u16, Epic>,
+    pub stories: HashMap<u16, Story>,
 }
