@@ -23,7 +23,18 @@ impl Page for HomePage {
         println!("----------------------------- EPICS -----------------------------");
         println!("     id     |               name               |      status      ");
 
-        // TODO: print out epics using get_column_string(). also make sure the epics are sorted by id
+        let epics = self.db.read_db()?.epics;
+
+        for epic_id in epics.keys().sorted() {
+            let epic = epics
+                .get(epic_id)
+                .ok_or_else(|| anyhow!("Could not find epic!"))?;
+
+            let id_col = get_column_string(&epic_id.to_string(), 11);
+            let name_col = get_column_string(&epic.name, 34);
+            let status_col = get_column_string(&epic.status.to_string(), 18);
+            println!("{}|{}|{}", id_col, name_col, status_col);
+        }
 
         println!();
         println!();
@@ -34,7 +45,21 @@ impl Page for HomePage {
     }
 
     fn handle_input(&self, input: &str) -> Result<Option<Action>> {
-        todo!() // match against the user input and return the corresponding action. If the user input was invalid return None.
+        let epics = self.db.read_db()?.epics;
+
+        match input {
+            "q" => Ok(Some(Action::Exit)),
+            "c" => Ok(Some(Action::CreateEpic)),
+            input => {
+                if let Ok(epic_id) = input.parse::<u32>() {
+                    if epics.contains_key(&epic_id) {
+                        return Ok(Some(Action::NavigateToEpicDetail { epic_id }));
+                    }
+                }
+
+                Ok(None)
+            }
+        }
     }
 }
 
@@ -54,7 +79,11 @@ impl Page for EpicDetail {
         println!("------------------------------ EPIC ------------------------------");
         println!("  id  |     name     |         description         |    status    ");
 
-        // TODO: print out epic details using get_column_string()
+        let id_col = get_column_string(&self.epic_id.to_string(), 6);
+        let name_col = get_column_string(&epic.name, 14);
+        let description_col = get_column_string(&epic.description, 29);
+        let status_col = get_column_string(&epic.status.to_string(), 14);
+        println!("{}|{}|{}|{}", id_col, name_col, description_col, status_col);
 
         println!();
 
@@ -63,7 +92,16 @@ impl Page for EpicDetail {
 
         let stories = &db_state.stories;
 
-        // TODO: print out stories using get_column_string(). also make sure the stories are sorted by id
+        for sotry_id in epic.stories.iter().sorted() {
+            let story = stories
+                .get(sotry_id)
+                .ok_or_else(|| anyhow!("Could not find story!"))?;
+
+            let id_col = get_column_string(&sotry_id.to_string(), 12);
+            let name_col = get_column_string(&story.name, 34);
+            let status_col = get_column_string(&story.status.to_string(), 18);
+            println!("{}|{}|{}", id_col, name_col, status_col);
+        }
 
         println!();
         println!();
@@ -74,7 +112,32 @@ impl Page for EpicDetail {
     }
 
     fn handle_input(&self, input: &str) -> Result<Option<Action>> {
-        todo!() // match against the user input and return the corresponding action. If the user input was invalid return None.
+        match input {
+            "p" => Ok(Some(Action::NavigateToPreviousPage)),
+            "u" => Ok(Some(Action::UpdateEpicStatus {
+                epic_id: self.epic_id,
+            })),
+            "d" => Ok(Some(Action::DeleteEpic {
+                epic_id: self.epic_id,
+            })),
+            "c" => Ok(Some(Action::CreateStory {
+                epic_id: self.epic_id,
+            })),
+            input => {
+                let stories = self.db.read_db()?.stories;
+
+                if let Ok(story_id) = input.parse::<u32>() {
+                    if stories.contains_key(&story_id) {
+                        return Ok(Some(Action::NavigateToStoryDetail {
+                            epic_id: self.epic_id,
+                            story_id,
+                        }));
+                    }
+                }
+
+                Ok(None)
+            }
+        }
     }
 }
 
@@ -95,7 +158,11 @@ impl Page for StoryDetail {
         println!("------------------------------ STORY ------------------------------");
         println!("  id  |     name     |         description         |    status    ");
 
-        // TODO: print out story details using get_column_string()
+        let id_col = get_column_string(&self.story_id.to_string(), 6);
+        let name_col = get_column_string(&story.name, 14);
+        let desc_col = get_column_string(&story.description, 29);
+        let status_col = get_column_string(&story.status.to_string(), 14);
+        println!("{}|{}|{}|{}", id_col, name_col, desc_col, status_col);
 
         println!();
         println!();
@@ -106,7 +173,17 @@ impl Page for StoryDetail {
     }
 
     fn handle_input(&self, input: &str) -> Result<Option<Action>> {
-        todo!() // match against the user input and return the corresponding action. If the user input was invalid return None.
+        match input {
+            "p" => Ok(Some(Action::NavigateToPreviousPage)),
+            "u" => Ok(Some(Action::UpdateStoryStatus {
+                story_id: self.story_id,
+            })),
+            "d" => Ok(Some(Action::DeleteStory {
+                epic_id: self.epic_id,
+                story_id: self.story_id,
+            })),
+            _ => Ok(None),
+        }
     }
 }
 
