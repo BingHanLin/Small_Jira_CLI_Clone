@@ -20,10 +20,11 @@ Jira is an industry-standard tool for tracking the progress of (not limited to) 
 
 ### Installation
 
-1. Clone the repository:
-    ```sh
-    git clone https://github.com/yourusername/jira-cli.git
-    ```
+Clone the repository:
+
+```sh
+git clone https://github.com/yourusername/jira-cli.git
+```
 
 ### Usage
 
