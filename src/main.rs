@@ -22,7 +22,7 @@ fn main() {
 
         if let Some(page) = navigator.get_current_page() {
             if let Err(e) = page.draw_page() {
-                print!("Error in drawing page: {}\nPress any key to continue...", e);
+                println!("Error in drawing page: {}\nPress any key to continue...", e);
 
                 wait_for_key_press();
             }
@@ -31,7 +31,7 @@ fn main() {
 
             match page.handle_input(user_input.trim()) {
                 Err(e) => {
-                    print!(
+                    println!(
                         "Error in handling input: {}\nPress any key to continue...",
                         e
                     );

@@ -76,6 +76,7 @@ pub struct EpicDetail {
 
 impl Page for EpicDetail {
     fn draw_page(&self) -> Result<()> {
+        print!("epic_id: {}", self.epic_id);
         let db_state = self.db.read_db()?;
         let epic = db_state
             .epics
