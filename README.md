@@ -1,4 +1,4 @@
-# Jira CLI
+# Small Jira CLI Clone
 
 This project is a bootcamp project learned from [Let's Get Rusty Bootcamp](https://github.com/letsgetrusty/bootcamp/tree/master/4.%20Projects/1.%20CLI).
 
